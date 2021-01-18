@@ -5,6 +5,7 @@ require 'savon'
 module Fnsapi
   class RequestError < StandardError; end
   class NotImplementedError < StandardError; end
+  RequestTimeoutError = Class.new(RequestError)
 
   class BaseService
     def client(additional_params = {})
