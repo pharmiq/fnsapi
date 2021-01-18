@@ -10,10 +10,8 @@ module Fnsapi
       message_id = result.body.dig(:send_message_response, :message_id)
 
       message = parse_message(message_id, user_id)
-      return unless message
-
       code = message.dig(:check_ticket_response, :result, :code)
-      code == '200'
+      [code, message.dig(:check_ticket_response, :result, :message)]
     end
 
     def get_data(object, user_id = 'default_user')
@@ -22,12 +20,10 @@ module Fnsapi
       message_id = result.body.dig(:send_message_response, :message_id)
 
       message = parse_message(message_id, user_id)
-      return unless message
-
       code = message.dig(:get_ticket_response, :result, :code)
-      return code if code != '200'
+      return [code, message.dig(:get_ticket_response, :result, :message)]  if code != '200'
 
-      JSON.parse(message.dig(:get_ticket_response, :result, :ticket))
+      [code, JSON.parse(message.dig(:get_ticket_response, :result, :ticket))]
     end
 
     private
@@ -49,7 +45,7 @@ module Fnsapi
         sleep(timeout)
       end
 
-      raise RequestError, 'Timeout reached'
+      raise RequestTimeoutError
     end
 
     def namespaces
