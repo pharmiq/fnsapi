@@ -14,6 +14,7 @@ module Fnsapi
 
     def token
       data = JSON.parse(@file.read)
+      @file.rewind
       expired_at = Time.parse(data['expire_at'])
 
       if expired_at < Time.now
