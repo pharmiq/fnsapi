@@ -21,6 +21,7 @@ module Fnsapi
     def client_params(additional_params = {})
       {
         wsdl: "#{fns_url}#{uri}",
+        endpoint: "#{fns_url}#{uri}",
         namespaces: namespaces,
         env_namespace: :soap,
         log: Fnsapi.configuration.log_enabled,
